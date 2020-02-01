@@ -38,14 +38,15 @@ public:
     explicit dtree_node() {}
 
     /// Returns a possibly null pointer to a chid of this node.
-    dtree_node* child_ptr(const T &input)
+    const dtree_node* child_ptr(const T &input) const
     {
         try { return &m_children.at(input); } catch(std::out_of_range &) {}
         return nullptr;
     }
-    const dtree_node* child_ptr(const T &input) const
+    dtree_node* child_ptr(const T &input)
     {
-        return const_cast<dtree_node<T>*>(this)->child_ptr(input);
+        const auto &this_const = *this;
+        return const_cast<dtree_node*>(this_const.child_ptr(input));
     }
 
     /// Inserts and returns this node's child for the given input. The child
