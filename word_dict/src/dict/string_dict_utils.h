@@ -74,7 +74,7 @@ public:
     string_dict_utils() = delete;
 
     /// Adds string to tree. Note that string won't be added in case it contains
-    /// the string_dict::tree_string_end_marker character.
+    /// the string_dict::tree_end_of_string_marker character.
     static bool add_string(dtree<char> &tree, const std::string &str);
 
     /// Least permissive string-matching-algorithm. Fastest. See comments on
@@ -107,7 +107,7 @@ public:
     static void print_tree_strings(const dtree<char> &tree, std::ostream &stream);
 
 public:
-    static const char tree_string_end_marker;
+    static const char tree_end_of_string_marker;
 };
 
 #endif // STRING_DICT_UTILS_H

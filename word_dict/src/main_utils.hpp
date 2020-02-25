@@ -64,7 +64,7 @@ void add_sample_words(word_dict &dict)
         "",
         "a",
         "b",
-        "$",    // KO because contains tree's string-end marker
+        std::string(1, word_dict::end_of_word_marker()), // KO
         "aba",
         "abb",
         "aaaa",

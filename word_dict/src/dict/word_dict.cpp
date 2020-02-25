@@ -68,3 +68,8 @@ void word_dict::print_words_values(std::ostream &stream) const
 {
     string_dict_utils::print_tree_strings(m_words, stream);
 }
+
+char word_dict::end_of_word_marker()
+{
+    return string_dict_utils::tree_end_of_string_marker;
+}

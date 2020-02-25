@@ -29,16 +29,16 @@
 #include <algorithm>
 #include <stack>
 
-const char string_dict_utils::tree_string_end_marker {'$'}; // any character (excluding those used in tree structure) will do just fine
+const char string_dict_utils::tree_end_of_string_marker {'$'}; // any character (excluding those used in tree structure) will do just fine
 
 bool string_dict_utils::add_string(dtree<char> &tree, const std::string &str)
 {
-    if(str.find(string_dict_utils::tree_string_end_marker) != std::string::npos) {
-        return false; // string must not contain tree_string_end_marker
+    if(str.find(string_dict_utils::tree_end_of_string_marker) != std::string::npos) {
+        return false; // string must not contain tree_end_of_string_marker
     }
 
     dtree<char>::node_t *node = &tree.root();
-    for(const char c : str + string_dict_utils::tree_string_end_marker) {
+    for(const char c : str + string_dict_utils::tree_end_of_string_marker) {
         node = &node->set_child(c);
     }
     return true;
@@ -51,7 +51,8 @@ string_dict_utils::match_data string_dict_utils::match_string_exactly(const dtre
     //
     // Logic: we keep reading characters from tree until success (all characters
     //        in the given string have been read from tree, including the
-    //        tree_string_end_marker) or failure (one character cannot be read).
+    //        tree_end_of_string_marker) or failure (one character cannot be
+    //        read).
     //
     // Complexity: roughly O(n * min(l, L)) where
     //                 n = number of children of the node with the widest
@@ -66,7 +67,7 @@ string_dict_utils::match_data string_dict_utils::match_string_exactly(const dtre
 
     typedef unsigned int uint;
 
-    const std::string &s = str + string_dict_utils::tree_string_end_marker;
+    const std::string &s = str + string_dict_utils::tree_end_of_string_marker;
     uint s_nb_chars_read = 0;
     const uint s_len = s.length();
 
@@ -112,18 +113,11 @@ string_dict_utils::match_data string_dict_utils::match_string_allow_substitution
     //                 L = length of the longest string in tree (it is
     //                     effectively the same as height of tree)
     //
-    // Side notes: when we think of it again it is unsure which version of
-    //             algorithm is the fastest. Indeed in recursive version the
-    //             call stack will never contain more than x elements (when x
-    //             refers to the length of the longest string in tree). But
-    //             iterative version might end up storing all nodes in tree into
-    //             a stack. So both versions of algorithm might be tested and
-    //             compared in the future (assuming a recursive version is also
-    //             provided).
+    // Side notes: see (1) at the bottom of this file.
 
     typedef unsigned int uint;
 
-    const std::string &s = str + string_dict_utils::tree_string_end_marker;
+    const std::string &s = str + string_dict_utils::tree_end_of_string_marker;
     const uint s_len = s.length();
     bool s_matched {false};
     std::string s_matched_string;
@@ -257,19 +251,12 @@ string_dict_utils::match_data string_dict_utils::match_string_levenshtein_distan
     //                 L = length of the longest string in tree (it is
     //                     effectively the same as height of tree)
     //
-    // Side notes: when we think of it again it is unsure which version of
-    //             algorithm is the fastest. Indeed in recursive version the
-    //             call stack will never contain more than x elements (when x
-    //             refers to the length of the longest string in tree). But
-    //             iterative version might end up storing all nodes in tree into
-    //             a stack. So both versions of algorithm might be tested and
-    //             compared in the future (assuming a recursive version is also
-    //             provided).
+    // Side notes: see (1) at the bottom of this file.
 
     typedef unsigned int uint;
     typedef std::vector<uint> uint_vector;
 
-    const std::string &s = str + string_dict_utils::tree_string_end_marker;
+    const std::string &s = str + string_dict_utils::tree_end_of_string_marker;
     bool s_matched {false};
     std::string s_matched_string;
     uint s_matched_string_cost {0};
@@ -321,7 +308,7 @@ string_dict_utils::match_data string_dict_utils::match_string_levenshtein_distan
             // Check if we have reached a string matching the given edit distance criteria.
             const uint curr_lev_row_goal_cost = curr_lev_row.at(curr_lev_row.size()-1);
             if(curr_lev_row_goal_cost <= edit_max
-            && it->first == string_dict_utils::tree_string_end_marker) {
+            && it->first == string_dict_utils::tree_end_of_string_marker) {
                 s_matched = true;
                 s_matched_string = curr_read_string;
                 s_matched_string_cost = curr_lev_row_goal_cost;
@@ -412,3 +399,10 @@ void string_dict_utils::print_tree_strings(const dtree<char> &tree,
         stream << str << std::endl;
     });
 }
+
+// (1) When we think of it again it is unsure which version of this algorithm is
+//     the fastest. Indeed in the recursive version the call stack will never
+//     contain more than x elements (when x refers to the length of the longest
+//     string in tree). But the iterative version might end up storing all nodes
+//     in tree into a stack. So both versions might be tested and compared in
+//     the future (assuming a recursive version is also provided).

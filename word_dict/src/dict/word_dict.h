@@ -45,6 +45,8 @@ public:
     void print_words_tree(std::ostream &stream) const;
     void print_words_values(std::ostream &stream) const;
 
+    static char end_of_word_marker();
+
 private:
     dtree<char> m_words;
 };

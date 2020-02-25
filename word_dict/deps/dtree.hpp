@@ -45,8 +45,8 @@ public:
     }
     dtree_node* child_ptr(const T &input)
     {
-        const auto &this_const = *this;
-        return const_cast<dtree_node*>(this_const.child_ptr(input));
+        const auto &this_const_ref = *this;
+        return const_cast<dtree_node*>(this_const_ref.child_ptr(input));
     }
 
     /// Inserts and returns this node's child for the given input. The child
